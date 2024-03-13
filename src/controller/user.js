@@ -29,10 +29,10 @@ let signIn =  async (req, res) => {
         if (!validPassword)
             return res.status(400).send("Invalid email or password");
 
-        // let jwtSecretKey = "secretKey";
+       
         let data = {
+          id : user._id,
             email : req.body.email,
-            password : req.body.password
         }
         const token = jwt.sign(data, process.env.JWTPRIVATEKEY);
         res.status(200).send({message : "User signIn successfully", token : token})
@@ -45,11 +45,47 @@ let getUser = async (req, res) => {
     try {
         const {id} = req.params
         const user = await User.findById(id);
-        res.status(200).send({message : "User signUp successfully", data : user})
+        res.status(200).send({message : "User retrived successfully", data : user})
     } catch (error) {
         res.status(500).send(error)
     }
 }
 
 
-module.exports = {signUp, signIn, getUser}
+const getUsers = async (req, res) => {
+    try {
+      const users = await User.find();
+      res.status(200).send({message : "Users retrived successfully", data : users})
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  };
+
+
+
+  const updateUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const updateUser = await User.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    res.status(200).send({message : "User updated successfully", data : updateUser})
+  } catch (error) {
+    res.status(500).send(error);
+  
+}
+  }
+
+const deleteUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const del = await User.findByIdAndDelete(id);
+    res.status(200).send({message : "User deleted successfully"})
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+
+module.exports = {signUp, signIn, getUser, getUsers, deleteUser, updateUser}

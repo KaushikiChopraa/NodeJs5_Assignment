@@ -21,9 +21,15 @@ const Schemas = {
             password: Joi.string().required()
         }),
      
-        login: Joi.object({
+        signIn: Joi.object({
             email: Joi.string().email().required(),
             password: Joi.string().required()
+        }),
+
+        update: Joi.object({
+            name: Joi.string(),
+            email: Joi.string().email(),
+            password: Joi.string()
         }),
     
 
